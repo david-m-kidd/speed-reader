@@ -17,9 +17,9 @@ export class ReaderDB extends Dexie {
   }
 }
 export const db = new ReaderDB();
-export type Backup = { schema: 1; app: 'stillword'; exportedAt: number; originalsIncluded: false; documents: ReadingDocument[]; progress: Progress[]; highlights: Highlight[]; sessions: Session[]; settings: Settings };
+export type Backup = { schema: 1 | 2; app: 'stillword'; exportedAt: number; originalsIncluded: false; documents: ReadingDocument[]; progress: Progress[]; highlights: Highlight[]; sessions: Session[]; settings: Settings };
 export async function exportBackup(): Promise<Backup> {
-  return db.transaction('r', db.tables, async () => ({ schema: 1, app: 'stillword', exportedAt: Date.now(), originalsIncluded: false, documents: await db.documents.toArray(), progress: await db.progress.toArray(), highlights: await db.highlights.toArray(), sessions: await db.sessions.toArray(), settings: (await db.preferences.get('settings'))?.value || defaults }));
+  return db.transaction('r', db.tables, async () => ({ schema: 2, app: 'stillword', exportedAt: Date.now(), originalsIncluded: false, documents: await db.documents.toArray(), progress: await db.progress.toArray(), highlights: await db.highlights.toArray(), sessions: await db.sessions.toArray(), settings: (await db.preferences.get('settings'))?.value || defaults }));
 }
 const fail = () => { throw new Error('This backup is invalid or uses an unsupported schema. No reading data was changed.'); };
 const finite = (n: unknown) => typeof n === 'number' && Number.isFinite(n) && n >= 0;
@@ -35,11 +35,20 @@ export function validSettings(s: Settings) {
 export function validateBackup(value: unknown): Backup {
   if (!value || typeof value !== 'object') return fail();
   const b = value as Backup;
-  if (b.schema !== 1 || b.app !== 'stillword' || !finite(b.exportedAt) || b.originalsIncluded !== false || !validSettings(b.settings)) return fail();
+  if (![1,2].includes(b.schema) || b.app !== 'stillword' || !finite(b.exportedAt) || b.originalsIncluded !== false || !validSettings(b.settings)) return fail();
   if (![b.documents, b.progress, b.highlights, b.sessions].every(a => Array.isArray(a) && a.length <= 100_000)) return fail();
   const documents = new Map<string, ReadingDocument>();
   for (const d of b.documents) {
-    if (!d || !id(d.id) || documents.has(d.id) || !str(d.title) || !str(d.text) || new Blob([d.text]).size > MAX_BYTES || !['text', 'txt', 'md', 'html'].includes(d.source) || d.version !== 1 || d.tokenizer !== 1 || !finite(d.createdAt) || !finite(d.updatedAt)) return fail();
+    if (!d || !id(d.id) || documents.has(d.id) || !str(d.title) || !str(d.text) || new Blob([d.text]).size > MAX_BYTES || !['text', 'txt', 'md', 'html', 'pdf', 'epub'].includes(d.source) || d.version !== 1 || d.tokenizer !== 1 || !finite(d.createdAt) || !finite(d.updatedAt)) return fail();
+    if (d.author !== undefined && !str(d.author)) return fail();
+    if (d.locations !== undefined) {
+      if (!Array.isArray(d.locations) || d.locations.length > 2000) return fail();
+      let end = 0;
+      for (const location of d.locations) {
+        if (!location || !['page','chapter'].includes(location.kind) || !str(location.label) || !integer(location.start) || !integer(location.end) || location.start < end || location.end < location.start || location.end > d.text.length) return fail();
+        end = location.end;
+      }
+    }
     if (d.sampleId !== undefined && (!str(d.sampleId) || !/^[a-z0-9-]{1,60}$/.test(d.sampleId))) return fail();
     if (d.attribution !== undefined) {
       if (!d.attribution || !str(d.attribution.author) || !str(d.attribution.chapter) || !str(d.attribution.sourceUrl)) return fail();

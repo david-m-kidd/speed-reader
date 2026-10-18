@@ -8,7 +8,7 @@ Researched October 17, 2026. These are **complete opening chapters**, not comple
 | [Pride and Prejudice](https://www.gutenberg.org/ebooks/1342) | Jane Austen | English | Chapter I | 847 | 3 min |
 | [Don Quijote](https://www.gutenberg.org/ebooks/2000) | Miguel de Cervantes Saavedra | Spanish | First part, Chapter I | 1,879 | 7 min |
 
-The selection provides a light fantasy opening, a short dialogue-driven chapter, and an original Spanish classic for accented-text practice. The editions’ own catalog pages above provide full-book downloads. For this app, choose **Plain Text**; the current release does not parse EPUB or PDF. The complete Don Quijote edition may exceed the app’s 250,000-token limit and should be imported in parts.
+The selection provides a light fantasy opening, a short dialogue-driven chapter, and an original Spanish classic for accented-text practice. The editions’ own catalog pages above provide full-book downloads. For this app, choose **Plain Text** or a DRM-free **EPUB** and review the extraction. Searchable PDFs are also supported. The complete Don Quijote edition may exceed the app’s 250,000-token limit and should be imported in parts.
 
 ## Preparation and provenance
 

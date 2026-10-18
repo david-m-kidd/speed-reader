@@ -21,5 +21,10 @@ describe('complete transactional backups', () => {
     expect(await db.documents.count()).toBe(1); expect((await db.progress.get(doc.id))?.index).toBe(2); expect((await db.highlights.get('h'))?.note).toBe('keep'); expect(await db.sessions.count()).toBe(1); expect((await db.preferences.get('settings'))?.value.wpm).toBe(300);
   });
   it('rejects tampered offsets and unsupported settings before writes', async () => { await db.documents.put(doc); const b = await exportBackup(); b.documents[0].tokens[0].start = 100; expect(() => validateBackup(b)).toThrow('invalid'); expect((await db.documents.get(doc.id))?.tokens[0].start).toBe(0); });
+  it('preserves source locations in v2 backups, accepts legacy v1 and rejects invalid mappings', async () => {
+    await db.documents.put({...doc, source:'pdf', locations:[{kind:'page',label:'1',start:0,end:doc.text.length}]});
+    const backup=await exportBackup();expect(backup.schema).toBe(2);await db.documents.clear();await restoreBackup(JSON.parse(JSON.stringify(backup)),false);expect((await db.documents.get(doc.id))?.locations).toEqual(backup.documents[0].locations);
+    backup.schema=1;expect(validateBackup(backup)).toBe(backup);backup.documents[0].locations![0].end=doc.text.length+1;expect(()=>validateBackup(backup)).toThrow('invalid');
+  });
   it('rolls back merge conflicts and preserves newer positions', async () => { await db.documents.put(doc); await db.progress.put({ documentId: doc.id, index: 3, completed: false, updatedAt: 10 }); const b = await exportBackup(); b.progress[0].updatedAt = 1; b.progress[0].index = 0; await restoreBackup(b, false); expect((await db.progress.get(doc.id))?.index).toBe(3); b.documents[0] = { ...doc, ...tokenize('different text') }; await expect(restoreBackup(b, false)).rejects.toThrow(); expect((await db.documents.get(doc.id))?.text).toBe(doc.text); });
 });

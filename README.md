@@ -1,6 +1,6 @@
 # Stillword
 
-A quieter place to read. An original, local-first reading PWA built for David’s `speed-reader` repository. Milestone 1 implements a fixed-anchor word-at-a-time reader, text/Markdown/HTML imports, local library and progress, highlights, activity, backups, and offline caching. No narration, app blocking, tracking, accounts, or document uploads.
+A quieter place to read. An original, local-first reading PWA built for David’s `speed-reader` repository. Milestones 1 and 2 implement a fixed-anchor word-at-a-time reader, text/Markdown/HTML/PDF/EPUB imports, local library and progress, highlights, activity, backups, and offline caching. No narration, app blocking, tracking, accounts, or document uploads.
 
 ## Run locally
 
@@ -26,7 +26,7 @@ Use the **EN / ES** switch in the header or reader, or choose the interface lang
 
 ## Use it
 
-- **Add a read:** paste text or upload TXT, Markdown, or HTML; review and edit the extraction; save. Limits: 20 MB and 250,000 whitespace-delimited tokens. No silent truncation.
+- **Add a read:** paste text or upload TXT, Markdown, HTML, searchable PDF, or DRM-free EPUB; review and edit the extraction; save. PDF pages and EPUB chapters remain editable individually and are available in Context navigation. Limits: 20 MB and 250,000 whitespace-delimited tokens. No silent truncation.
 - **Read:** tap the word or Play. The center of the colored anchor stays fixed. Adjust speed from 100–1,000 WPM without losing your place.
 - **Hold to read (default):** hold the word area or the large Hold to read control; release, cancel, or lose capture to pause. Use the smaller Hands-free button for continuous play/pause. Settings can change the word-area interaction to tap-to-toggle. The first upgrade to this design enables hold by default for existing preferences, preserving all other settings and reading records.
 - **Move around:** scrub, rewind 10 words, or jump sentences. Space toggles playback; arrows move one word while paused; modified arrows jump sentences. Form fields keep their usual keyboard behavior.
@@ -68,7 +68,7 @@ GitHub serves the public application shell; imported documents remain in the bro
 
 ## Scope and implementation notes
 
-PDF/EPUB parsing belongs to Milestone 2. OCR, arbitrary URL import, native sharing/extensions, native packaging, sync, and widgets remain later work. There are no placeholder controls advertising those features. Markdown extraction covers common inline formatting, headings, links and lists; complex tables/raw HTML may require manual editing in the preview. HTML extraction preserves block text and omits scripts, hidden elements and metadata; it is not an article-boilerplate detector.
+PDF imports use local PDF.js extraction, with opt-in margin/page-number removal, column order and line-break hyphenation cleanup. Review the before/after text; changing cleanup resets preview edits. Layout order is heuristic, and tables, equations, diagrams and rotated/complex layouts can require manual correction. Image-only pages require OCR; mixed PDFs warn about empty pages. Password-protected PDFs and encrypted/DRM EPUBs are rejected clearly. EPUB 2/3 text books follow package spine order with navigation labels; scripts, navigation boilerplate, hidden elements and remote resources are omitted. Archive limits: 2,000 entries, 80 MB total decompressed, 20 MB per entry, 100:1 maximum compression ratio (1 KB allowance). ZIP64 and non-UTF-8 archive names are unsupported. PDF limit: 2,000 pages. Extracted text has an additional conservative 10-million UTF-16-unit guard, then the normal 20 MB / 250,000-word save guard. Originals are not retained. See `docs/imports.md`. OCR, arbitrary URL import, native sharing/extensions, native packaging, sync, and widgets remain later work. There are no placeholder controls advertising those features. Markdown extraction covers common inline formatting, headings, links and lists; complex tables/raw HTML may require manual editing in the preview. HTML extraction preserves block text and omits scripts, hidden elements and metadata; it is not an article-boilerplate detector.
 
 English and Spanish whitespace-delimited reading are supported. Graphemes use `Intl.Segmenter`; a fallback preserves combining marks and common joined emoji, without claiming full Unicode grapheme or CJK segmentation. Sentence boundaries are a deterministic punctuation heuristic; abbreviations can create extra sentence breaks. Long words shrink to 16px and, only if still too wide, scale uniformly to fit; Context always exposes their full text.
 

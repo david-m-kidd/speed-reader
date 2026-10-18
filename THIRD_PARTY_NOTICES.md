@@ -7,3 +7,5 @@ DM Sans is bundled locally through `@fontsource-variable/dm-sans`; see `public/D
 The leaf application icon, interface composition, sample read “The art of paying attention,” and original test text were authored for this project. No Readrrr assets, proprietary text, logos, or source implementation are included. The supplied build brief is retained as the project specification.
 
 The three classic chapter samples are derived from Project Gutenberg editions 11, 1342 and 2000. See `docs/sample-books.md` for authors, source links, extraction details and U.S. public-domain status; `public/samples/NOTICE.txt` contains production credits and the complete Project Gutenberg license. These sample book texts were not authored for this project.
+
+PDF extraction uses Mozilla PDF.js (`pdfjs-dist` 6.4.299, Apache-2.0), including its locally bundled worker. EPUB ZIP decompression uses fflate 0.8.3 (MIT); EPUB package/spine/navigation parsing is implemented locally with inert browser parsing and a bounded archive worker. Licenses are in `public/PDFjs-LICENSE.txt` and `public/fflate-LICENSE.txt`. No third-party cover art is used.

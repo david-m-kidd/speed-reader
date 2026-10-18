@@ -1,5 +1,6 @@
 export type Token = { id: number; text: string; start: number; end: number; paragraph: number; sentence: number; paragraphEnd: boolean; sentenceEnd: boolean };
-export type ReadingDocument = { id: string; title: string; source: 'text' | 'txt' | 'md' | 'html'; text: string; tokens: Token[]; version: 1; tokenizer: 1; createdAt: number; updatedAt: number; sampleId?: string; attribution?: { author: string; sourceUrl: string; chapter: string } };
+export type SourceLocation = { kind: 'page' | 'chapter'; label: string; start: number; end: number };
+export type ReadingDocument = { id: string; title: string; source: 'text' | 'txt' | 'md' | 'html' | 'pdf' | 'epub'; text: string; tokens: Token[]; locations?: SourceLocation[]; author?: string; version: 1; tokenizer: 1; createdAt: number; updatedAt: number; sampleId?: string; attribution?: { author: string; sourceUrl: string; chapter: string } };
 export type Progress = { documentId: string; index: number; completed: boolean; updatedAt: number };
 export type Highlight = { id: string; documentId: string; start: number; end: number; quote: string; note: string; createdAt: number };
 export type Settings = { uiLanguage?: 'en' | 'es'; wpm: number; theme: 'dark' | 'light' | 'sepia'; font: 'sans' | 'serif' | 'mono'; fontSize: number; anchorColor: string; guides: boolean; punctuation: boolean; longWords: boolean; hold: boolean; reducedMotion: boolean; goal: number; timezone: string };

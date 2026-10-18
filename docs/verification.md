@@ -19,10 +19,20 @@ Browser screenshots were visually reviewed for the library and refined reader in
 - Midnight tests cover local boundaries on DST dates; historical daily buckets retain their session timezone. This does not claim a full audit of every IANA timezone’s historical rules.
 - The UI’s safe-area and viewport rules are implemented, but physical Safari/Home Screen installation, lock/interruptions, real touch selection, accessibility system settings, wake lock and offline storage behavior need [the iPhone checklist](iphone-checklist.md).
 - The GitHub Pages workflow uses supported upstream actions and checks root/nested builds, but requires GitHub authentication, repository push, Pages configuration and an actual successful remote run before deployment can be claimed.
-- PDF/EPUB, OCR, native extensions, URL fetching and sync are later milestones. No fake controls stand in for them.
+- OCR, native extensions, URL fetching and sync remain later milestones. PDF/EPUB imports are implemented in milestone 2; see the newer checks below.
 
 ## Reproduce
 
 Follow the commands in the README. Browser installation is a development dependency and has no effect on application runtime. On restricted Windows runners, set `PLAYWRIGHT_BROWSERS_PATH` to an accessible shared folder before both installing and testing browsers. `TEST_URL` may point at an already running production preview. Test data lives in isolated browser contexts and is not inserted into the user’s library.
 
 Spanish interface verification covers all screens, reader position/content preservation, note/quote preservation, offline reload, switching back to English, translation interpolation and optional-language compatibility with earlier backups.
+
+## Milestone 2 verification — October 17, 2026
+
+- Typecheck and ESLint pass; 38 unit tests pass.
+- 15 Chromium browser workflows pass at root and at `/focus-reader/`, including the existing reader suite.
+- Authored PDF fixtures cover two columns, repeated margin text, isolated page numbers, line-end hyphenation, blank/scanned detection, password rejection, editable previews, source navigation, and cancellation of a 1,000-page import without a saved entry.
+- Authored EPUB 3 and EPUB 2/NCX fixtures verify metadata, spine order rather than filename order, navigation labels, editable chapters, hidden/scripted content exclusion and zero remote tracking requests.
+- Archive units check CRC/corruption, truncation, traversal, entry-count, ratio and dishonest inflation sizes. Worker cancellation and extracted-size guards bound imports; exact supported limits are in `imports.md`.
+- First-time PDF/EPUB imports work offline after caching; v2 backup restores source mappings in a fresh browser context; v1 backups remain accepted.
+- Mobile import preview is visually reviewed at 390 CSS pixels and checked for horizontal overflow. This is browser automation, not a physical iPhone test. Safari/Home Screen/Files/storage-eviction checks remain pending.

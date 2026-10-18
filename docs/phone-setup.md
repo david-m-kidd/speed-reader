@@ -25,8 +25,8 @@ Your phone and computer have separate libraries. To move existing reading and hi
 
 ## Supported formats
 
-Pasted text; `.txt`; `.md` / `.markdown`; `.html` / `.htm`. English/Spanish whitespace-delimited reading. Limits: 20 MB per input and 250,000 tokens per document. HTML ZIP archives must be unpacked first; choose the HTML file, not the ZIP. JSON files are only for Stillword backup restore in Settings, not book import.
+Pasted text; `.txt`; `.md` / `.markdown`; `.html` / `.htm`; searchable `.pdf`; DRM-free `.epub` (common EPUB 2/3 text books). English/Spanish whitespace-delimited reading. Limits: 20 MB per input and 250,000 tokens per document. HTML ZIP archives must be unpacked first; choose the HTML file, not the ZIP. JSON files are only for Stillword backup restore in Settings, not book import.
 
-PDF, EPUB, DOCX, Kindle/MOBI, photos and scanned documents are not supported in this release. For Project Gutenberg books, select **Plain Text**, not EPUB. PDF/EPUB parsing is Milestone 2.
+DOCX, Kindle/MOBI, photos and scanned/image-only PDFs are not supported. PDF text order needs review; tables, equations and diagrams are not preserved. Password-protected PDFs and encrypted/DRM EPUBs must be replaced with unlocked/DRM-free editions. For Project Gutenberg, Plain Text and EPUB are both supported. Review extraction before saving.
 
 Sources: [GitHub Pages availability/setup](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site), [Apple’s Home Screen instructions](https://support.apple.com/guide/iphone/bookmark-a-website-iph42ab2f3a7/ios).

@@ -36,3 +36,14 @@ label{display:block;font-size:12px;color:var(--text);margin-bottom:22px}input:no
 @media(max-width:760px){.topbar>span{display:none}.topbar>div{width:100%;gap:14px}.topbar .avatar{margin-left:auto}.reader-header .reader-header-left{gap:6px}.reader-header-left .text-button span{display:none}.reader-header .reader-title{max-width:none}.reader-header .language-toggle button{min-width:34px;min-height:40px;padding:4px 7px;font-size:9px}.reader-header{gap:8px}html[lang=es] .page h1{font-size:42px}html[lang=es] .hold-button{font-size:12px}html[lang=es] .sample-meta{font-size:8px}}
 
 .language-toggle button,.reader-header .language-toggle button{min-width:44px;min-height:44px}
+
+.cleanup-options { border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin: 20px 0; min-width: 0; }
+.cleanup-options legend { font-size: .85rem; padding: 0 8px; }
+.extraction-details select, .location-picker select { width: 100%; min-height: 44px; }
+.extraction-details summary { cursor: pointer; min-height: 44px; padding: 12px 0; font-size: .85rem; }
+.source-preview { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 240px; overflow: auto; font: inherit; font-size: .85rem; line-height: 1.7; padding: 14px; background: var(--bg); border-radius: 8px; }
+.import-progress { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 20px 0; }
+.import-progress progress { width: 100%; accent-color: var(--accent); }
+.location-picker { display: block; margin-bottom: 16px; }
+.cleanup-options .toggle-row span { max-width: 85%; }
+.extraction-warning { position: static; padding: 12px 15px; margin: 16px 0; background: var(--surface2); border-left: 2px solid var(--green); border-radius: 5px; color: var(--muted); font-size: 12px; line-height: 1.7; }
