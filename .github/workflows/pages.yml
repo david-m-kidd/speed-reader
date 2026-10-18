@@ -1,0 +1,61 @@
+name: Check and deploy Stillword
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - name: Build and test at origin root
+        run: npm run build
+        env:
+          APP_BASE: /
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          APP_BASE: /
+      - name: Build and test at a nested project path
+        run: |
+          npm run build
+          npm run test:e2e
+        env:
+          APP_BASE: /focus-reader/
+          TEST_PATH: /focus-reader/
+      - name: Build actual repository deployment
+        run: npm run build
+      - uses: actions/upload-pages-artifact@v5
+        if: github.event_name != 'pull_request'
+        with:
+          path: dist
+  deploy:
+    # Private pushes still run all checks. Run manually after enabling Pages,
+    # or publish automatically from a public repository.
+    if: github.event_name != 'pull_request' && (github.event.repository.private == false || github.event_name == 'workflow_dispatch')
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/configure-pages@v6
+      - uses: actions/deploy-pages@v5
+        id: deployment
