@@ -20,6 +20,10 @@ npm run preview
 
 Use `http://localhost`, `http://127.0.0.1`, or an HTTPS deployment for service workers. Opening `index.html` as a file does not run the app correctly. A phone needs a reachable HTTPS deployment for installation/offline preparation; the computer’s loopback address is not the phone’s address.
 
+## Interface language
+
+Use the **EN / ES** switch in the header or reader, or choose the interface language in Settings. Navigation, forms, controls, dialogs, activity labels and error messages switch to Spanish. The choice is saved on the device, works offline and travels in backups. Existing backups without a language preference remain supported. Book text, user titles, highlights and notes are never machine-translated. Source/legal license notices retain their original wording.
+
 ## Use it
 
 - **Add a read:** paste text or upload TXT, Markdown, or HTML; review and edit the extraction; save. Limits: 20 MB and 250,000 whitespace-delimited tokens. No silent truncation.

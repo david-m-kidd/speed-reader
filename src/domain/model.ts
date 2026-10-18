@@ -2,9 +2,9 @@ export type Token = { id: number; text: string; start: number; end: number; para
 export type ReadingDocument = { id: string; title: string; source: 'text' | 'txt' | 'md' | 'html'; text: string; tokens: Token[]; version: 1; tokenizer: 1; createdAt: number; updatedAt: number; sampleId?: string; attribution?: { author: string; sourceUrl: string; chapter: string } };
 export type Progress = { documentId: string; index: number; completed: boolean; updatedAt: number };
 export type Highlight = { id: string; documentId: string; start: number; end: number; quote: string; note: string; createdAt: number };
-export type Settings = { wpm: number; theme: 'dark' | 'light' | 'sepia'; font: 'sans' | 'serif' | 'mono'; fontSize: number; anchorColor: string; guides: boolean; punctuation: boolean; longWords: boolean; hold: boolean; reducedMotion: boolean; goal: number; timezone: string };
+export type Settings = { uiLanguage?: 'en' | 'es'; wpm: number; theme: 'dark' | 'light' | 'sepia'; font: 'sans' | 'serif' | 'mono'; fontSize: number; anchorColor: string; guides: boolean; punctuation: boolean; longWords: boolean; hold: boolean; reducedMotion: boolean; goal: number; timezone: string };
 export type Session = { id: string; documentId: string; startedAt: number; endedAt: number; activeMs: number; words: number; days: Record<string, { words: number; activeMs: number }>; settings: Settings };
-export const defaults: Settings = { wpm: 300, theme: 'dark', font: 'sans', fontSize: 52, anchorColor: '#f17567', guides: true, punctuation: true, longWords: true, hold: true, reducedMotion: false, goal: 2000, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
+export const defaults: Settings = { uiLanguage: 'en', wpm: 300, theme: 'dark', font: 'sans', fontSize: 52, anchorColor: '#f17567', guides: true, punctuation: true, longWords: true, hold: true, reducedMotion: false, goal: 2000, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone };
 export const MAX_BYTES = 20 * 1024 * 1024;
 export const MAX_TOKENS = 250_000;
 

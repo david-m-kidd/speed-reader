@@ -5,10 +5,10 @@ Local Milestone 1 verification on Windows, October 17, 2026. These results descr
 ## Automated checks
 
 - TypeScript typecheck, ESLint, production build: passed.
-- Vitest: 28 unit tests covering Unicode tokens/offsets, grapheme fallback, anchor heuristic, deterministic pacing, empty/token-limit rejection, deadline scheduling/drift, pause/resume/seek/speed changes, stale callbacks, final interval counting, StrictMode-like lifecycle repetition, serious lateness, sentence seeking, local-time/DST midnight accounting, streaks, backup roundtrip/idempotency/tampering/conflicts and the database preference migration.
-- Playwright Chromium: 10 workflows pass at `/`, and the same 10 pass at `/focus-reader/`.
+- Vitest: 32 unit tests covering Unicode tokens/offsets, grapheme fallback, anchor heuristic, deterministic pacing, empty/token-limit rejection, deadline scheduling/drift, pause/resume/seek/speed changes, stale callbacks, final interval counting, StrictMode-like lifecycle repetition, serious lateness, sentence seeking, local-time/DST midnight accounting, streaks, backup roundtrip/idempotency/tampering/conflicts and the database preference migration.
+- Playwright Chromium: 11 workflows pass at `/`, and the same 11 pass at `/focus-reader/`.
 - Workflows exercise import/play/pause/reload; context selection and highlights; exported backup payload restored into an empty browser database; fixed glyph centers within 1 CSS pixel in sans/serif/mono; accented/combining tokens and extreme long-token fitting on 390px viewports; a 100,000-word local file; scoped manifest/worker/icons and refreshed hash routes; inert malicious HTML with no tracking requests; offline relaunch; completion/seek statistics; background pause; empty mobile/desktop layouts; default hold-to-read/release/cancel/persistence on the word area and primary hold control; all three public-domain chapter samples open offline without duplicate library records and include their source/license notice.
-- Production shell precaches approximately 528 KiB of local assets. No runtime external font or document service is needed.
+- Production shell precaches approximately 548 KiB of local assets. No runtime external font or document service is needed.
 
 Browser screenshots were visually reviewed for the library and refined reader in desktop, phone portrait and phone landscape layouts. They show authored fixtures or the original empty library, not personal documents. A 100,000-word import passes in desktop Chromium; phone performance remains pending.
 
@@ -24,3 +24,5 @@ Browser screenshots were visually reviewed for the library and refined reader in
 ## Reproduce
 
 Follow the commands in the README. Browser installation is a development dependency and has no effect on application runtime. On restricted Windows runners, set `PLAYWRIGHT_BROWSERS_PATH` to an accessible shared folder before both installing and testing browsers. `TEST_URL` may point at an already running production preview. Test data lives in isolated browser contexts and is not inserted into the user’s library.
+
+Spanish interface verification covers all screens, reader position/content preservation, note/quote preservation, offline reload, switching back to English, translation interpolation and optional-language compatibility with earlier backups.
