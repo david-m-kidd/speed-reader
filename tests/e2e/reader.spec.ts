@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function importText(page: Page, text: string, title = 'A quiet test') {
-  await page.goto('./#import'); await page.getByPlaceholder('Document title').fill(title);
+  await page.goto('./#import'); await page.getByRole('button',{name:'Paste text',exact:true}).click(); await page.getByPlaceholder('Document title').fill(title);
   await page.getByTestId('import-text').fill(text); await page.getByRole('button', { name: 'Review text' }).click();
   await page.getByRole('button', { name: 'Save to library' }).click(); await expect(page.getByTestId('rsvp-word')).toBeVisible();
 }
@@ -123,7 +123,7 @@ test('Spanish covers every screen, persists offline, and preserves book content 
   await expect(page.getByRole('heading', { name: 'Capítulos de muestra' })).toBeVisible();
   await page.screenshot({ path: 'test-results/spanish-library-mobile.png', fullPage: true });
   await page.goto('./#import'); await expect(page.getByRole('button', { name: 'Subir un archivo' })).toBeVisible();
-  await page.getByTestId('import-text').fill('Texto de prueba.'); await page.getByRole('button', { name: 'Revisar texto' }).click(); await expect(page.getByRole('button', { name: 'Guardar en la biblioteca' })).toBeVisible();
+  await page.getByRole('button',{name:'Pegar texto',exact:true}).click();await page.getByTestId('import-text').fill('Texto de prueba.'); await page.getByRole('button', { name: 'Revisar texto' }).click(); await expect(page.getByRole('button', { name: 'Guardar en la biblioteca' })).toBeVisible();
   await page.goto('./#highlights'); await expect(page.getByText('My note: Settings')).toBeVisible(); await expect(page.locator('blockquote')).toHaveText('Play');
   await page.goto('./#stats'); await expect(page.getByText('palabras leídas', { exact: true })).toBeVisible(); await expect(page.getByText('ÚLTIMOS 7 DÍAS')).toBeVisible();
   await page.goto('./#settings'); await expect(page.getByRole('button', { name: 'Exportar copia de seguridad' })).toBeVisible(); await expect(page.getByRole('combobox', { name: 'Idioma de la interfaz', exact: true })).toHaveValue('es');

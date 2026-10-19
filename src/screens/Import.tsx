@@ -10,6 +10,7 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
   const [title,setTitle]=useState(''),[raw,setRaw]=useState(''),[text,setText]=useState('');
   const [source,setSource]=useState<ReadingDocument['source']>('text'),[preview,setPreview]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(''),[extracting,setExtracting]=useState(false);
   const [book,setBook]=useState<Extraction|null>(null),[pages,setPages]=useState<PdfPage[]|null>(null),[cleanup,setCleanup]=useState(defaultCleanup),[section,setSection]=useState(0),[progress,setProgress]=useState<[number,number]>([0,0]);
+  const [method,setMethod]=useState<'paste'|'upload'|null>(null);
   const file=useRef<HTMLInputElement>(null), controller=useRef<AbortController|null>(null);
   useEffect(()=>()=>controller.current?.abort(),[]);
   const combined=book?joinSections(book.sections).text:text, count=combined.match(/\S+/gu)?.length||0;
@@ -18,7 +19,7 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
     setText(result);setBook(null);setPages(null);setSource(format==='md'||format==='markdown'?'md':format==='html'||format==='htm'?'html':format==='txt'?'txt':'text');setPreview(true);setError('');
   }catch(e){setError((e as Error).message);}};
   const load=async(f?:File)=>{
-    if(!f)return; controller.current?.abort();const job=new AbortController();controller.current=job;
+    if(!f)return; setMethod('upload'); controller.current?.abort();const job=new AbortController();controller.current=job;
     setError('');setBusy(true);setExtracting(true);setProgress([0,0]);
     try {
       guardSize(f.size);const ext=f.name.split('.').pop()?.toLowerCase()||'';
@@ -43,10 +44,13 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
   const updateCleanup=(options:PdfCleanup)=>{if(!pages||!book)return;setCleanup(options);setBook({...book,sections:pdfSections(pages,options)});};
   const sectionLabel=(index:number)=>book?.sections[index]?.kind==='page'?t('Page {0}',[book.sections[index].label]):book?.sections[index]?.label;
   return <div className="page narrow"><button className="text-button" onClick={back}><ArrowLeft size={17}/>{t(' Your library')}</button>
-    <div className="eyebrow">{t('DOCUMENT IMPORT')}</div><h1>{t('Import a document')}</h1><p className="lede">{t('Paste text or upload TXT, Markdown, HTML, PDF, or EPUB. Review the extracted text before saving.')}</p>
-    <div className="import-panel"><div className="section-heading"><h2>{preview?t('Review your text'):t('Paste or upload')}</h2><span className="pill">{preview?t('{0} words',[count.toLocaleString(locale)]):t('01 / IMPORT')}</span></div>
+    <div className="eyebrow">{t('DOCUMENT IMPORT')}</div><h1>{t('Import a document')}</h1><p className="lede">{t('Choose how you want to add your document.')}</p>
+    <div className="import-panel"><div className="section-heading"><h2>{preview?t('Review your text'):method==='paste'?t('Paste text'):method==='upload'?t('Upload a file'):t('How would you like to import?')}</h2><span className="pill">{preview?t('{0} words',[count.toLocaleString(locale)]):t('01 / IMPORT')}</span></div>
+      {!method&&!preview&&<div className="import-choices"><button className="import-choice" aria-label={t('Paste text')} onClick={()=>{setMethod('paste');setError('');}}><FileText size={25}/><strong>{t('Paste text')}</strong><span>{t('Copy text from an article, book, or document.')}</span><ArrowRight size={18}/></button><button className="import-choice" aria-label={t('Upload a file')} onClick={()=>{setMethod('upload');setError('');file.current?.click();}}><Upload size={25}/><strong>{t('Upload a file')}</strong><span>{t('Choose TXT, Markdown, HTML, PDF, or EPUB from your device.')}</span><ArrowRight size={18}/></button></div>}
+      {method&&!preview&&<button className="text-button import-method-back" disabled={busy} onClick={()=>{setMethod(null);setError('');}}><ArrowLeft size={15}/>{t('Change import method')}</button>}
+      {method==='upload'&&!preview&&!extracting&&<div className="upload-prompt"><Upload size={30}/><p>{t('Select a file to extract its text. You can review and edit it before saving.')}</p><button className="primary" onClick={()=>file.current?.click()}>{t('Choose a file')}<Upload size={16}/></button></div>}
       {extracting&&<div role="status" className="import-progress"><span>{progress[1]?t('Extracting {0} of {1}…',progress):t('Preparing import…')}</span><progress value={progress[0]} max={progress[1]||1}/><button className="secondary" onClick={()=>controller.current?.abort()}>{t('Cancel import')}</button></div>}
-      <label>{t('Title ')}<span className="muted">{t('(optional)')}</span><input placeholder={t('Document title')} value={title} onChange={e=>setTitle(e.target.value)} maxLength={300} disabled={busy}/></label>
+      {(method==='paste'||preview)&&<label>{t('Title ')}<span className="muted">{t('(optional)')}</span><input placeholder={t('Document title')} value={title} onChange={e=>setTitle(e.target.value)} maxLength={300} disabled={busy}/></label>}
       {book?.author&&<p className="fine">{book.author}</p>}
       {book&&<div className="extraction-details">
         {book.warnings.map(w=><p className="extraction-warning" key={w}>{t(w)}</p>)}
@@ -54,12 +58,12 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
         <label>{t('Page or chapter')}<select value={section} disabled={busy} onChange={e=>setSection(+e.target.value)}>{book.sections.map((s,i)=><option key={i} value={i}>{sectionLabel(i)}{!s.text?' · '+t('No text'):''}</option>)}</select></label>
         {pages&&<details><summary>{t('Before cleanup · extracted page text')}</summary><pre className="source-preview">{pdfSections([pages[section]],defaultCleanup)[0].text||t('No text')}</pre></details>}
       </div>}
-      <label>{preview?t('Cleaned text · edit anything before saving'):t('Paste text')}<textarea data-testid="import-text" rows={12} placeholder={t('Paste the text you want to read…')} value={book?book.sections[section]?.text||'':preview?text:raw} disabled={busy} onChange={e=>{if(book)setBook({...book,sections:book.sections.map((s,i)=>i===section?{...s,text:e.target.value}:s)});else if(preview)setText(e.target.value);else setRaw(e.target.value);}} spellCheck={false}/></label>
+      {(method==='paste'||preview)&&<label>{preview?t('Cleaned text · edit anything before saving'):t('Paste text')}<textarea data-testid="import-text" rows={12} placeholder={t('Paste the text you want to read…')} value={book?book.sections[section]?.text||'':preview?text:raw} disabled={busy} onChange={e=>{if(book)setBook({...book,sections:book.sections.map((s,i)=>i===section?{...s,text:e.target.value}:s)});else if(preview)setText(e.target.value);else setRaw(e.target.value);}} spellCheck={false} autoFocus={!preview&&method==='paste'}/></label>}
       <p className="fine">{t('Up to 20 MB per input and 250,000 words per document. English and Spanish supported. Your text is never silently shortened.')}</p>
       {book&&<p className="fine">{t('Each page or chapter stays editable. Locations are saved with your text; original file bytes are not kept.')}</p>}
       {error&&<p role="alert" className="error">{t(error)}</p>}
 
-      <div className="button-row">{preview?<><button className="secondary" disabled={busy} onClick={()=>{setPreview(false);setBook(null);setPages(null);setSource('text');}}>{t('Back to source')}</button><button className="primary" disabled={busy||count===0||count>MAX_TOKENS} onClick={async()=>{setBusy(true);try{await save(book?structuredDocument(title,book,source):makeDocument(title,text,source));}catch(e){setError((e as Error).message);setBusy(false);}}}>{busy?t('Saving…'):t('Save to library')}<ArrowRight size={17}/></button></>:<><button className="secondary" disabled={busy} onClick={()=>file.current?.click()}><Upload size={16}/>{t(' Upload a file')}</button><button className="primary" disabled={busy||!raw.trim()} onClick={()=>prepare(raw,'text')}>{t('Review text')}<ArrowRight size={17}/></button></>}</div>
+      <div className="button-row">{preview?<><button className="secondary" disabled={busy} onClick={()=>{setPreview(false);setBook(null);setPages(null);}}>{t('Back to source')}</button><button className="primary" disabled={busy||count===0||count>MAX_TOKENS} onClick={async()=>{setBusy(true);try{await save(book?structuredDocument(title,book,source):makeDocument(title,text,source));}catch(e){setError((e as Error).message);setBusy(false);}}}>{busy?t('Saving…'):t('Save to library')}<ArrowRight size={17}/></button></>:method==='paste'?<button className="primary" disabled={busy||!raw.trim()} onClick={()=>prepare(raw,'text')}>{t('Review text')}<ArrowRight size={17}/></button>:null}</div>
       <input ref={file} className="sr-only" aria-label={t('Upload reading file')} type="file" disabled={busy} accept=".txt,.md,.markdown,.html,.htm,.pdf,.epub,text/plain,text/markdown,text/html,application/pdf,application/epub+zip" onChange={e=>void load(e.target.files?.[0])}/>
     </div><div className="import-notes"><span><FileText size={17}/>{t(' TXT, Markdown, HTML, PDF & EPUB')}</span><span><ShieldCheck size={17}/>{t(' Only on this device')}</span></div>
   </div>;

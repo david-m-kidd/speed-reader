@@ -81,3 +81,14 @@ label{display:block;font-size:12px;color:var(--text);margin-bottom:22px}input:no
 .demo-player .word-box { overflow: clip; }
 .demo-header { flex-wrap: wrap; }
 .demo-header>div { margin-left: auto; }
+.import-choices { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:8px 0 24px; }
+.import-choice { display:flex; flex-direction:column; align-items:flex-start; text-align:left; gap:15px; padding:25px; background:var(--bg); border:1px solid var(--border); border-radius:9px; color:var(--text); min-height:220px; }
+.import-choice:hover,.import-choice:focus-visible { border-color:var(--green); background:var(--surface2); }
+.import-choice>svg { color:var(--green); }
+.import-choice strong { font-size:18px; }
+.import-choice span { color:var(--muted); font-size:12px; line-height:1.7; flex:1; }
+.import-method-back { margin:0 0 20px; }
+.upload-prompt { text-align:center; padding:24px 12px 34px; }
+.upload-prompt>svg { color:var(--green); margin-bottom:12px; }
+.upload-prompt p { color:var(--muted); font-size:13px; max-width:370px; margin:0 auto 24px; }
+@media(max-width:600px) { .import-choices { grid-template-columns:1fr; } .import-choice { min-height:0; padding:22px; gap:12px; } .import-choice>svg:last-child { align-self:flex-end; } }

@@ -27,7 +27,7 @@ test('scanned PDFs, malformed EPUBs, DRM and cancellation never create library e
   await upload.setInputFiles({name:'locked.pdf',mimeType:'application/pdf',buffer:Buffer.from(lockedPdf.base64,'base64')});await expect(page.getByRole('alert')).toContainText('Password-protected');
   await upload.setInputFiles({name:'broken.epub',mimeType:'application/epub+zip',buffer:epubFixture({malformed:true})});await expect(page.getByRole('alert')).toContainText('malformed');
   await upload.setInputFiles({name:'locked.epub',mimeType:'application/epub+zip',buffer:epubFixture({drm:true})});await expect(page.getByRole('alert')).toContainText('DRM');
-  await upload.setInputFiles({name:'long.pdf',mimeType:'application/pdf',buffer:pdfFixture(false,1000)});await page.getByRole('button',{name:'Cancel import'}).click();await expect(page.getByRole('button',{name:'Upload a file'})).toBeEnabled();await expect(page.getByRole('button',{name:'Save to library'})).toHaveCount(0);
+  await upload.setInputFiles({name:'long.pdf',mimeType:'application/pdf',buffer:pdfFixture(false,1000)});await page.getByRole('button',{name:'Cancel import'}).click();await expect(page.getByRole('button',{name:'Choose a file'})).toBeEnabled();await expect(page.getByRole('button',{name:'Save to library'})).toHaveCount(0);
   await page.goto('./#library');await expect(page.getByRole('button',{name:'Add your first read'})).toBeVisible();
 });
 

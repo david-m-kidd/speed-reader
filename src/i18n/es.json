@@ -354,5 +354,12 @@
   "Demo chapters": "Capítulos de muestra",
   "Sample chapters in English and Spanish. Available offline.": "Capítulos de muestra en inglés y español. Disponibles sin conexión.",
   "Document complete.": "Documento completado.",
-  "Release to pause.": "Suelta para pausar."
+  "Release to pause.": "Suelta para pausar.",
+  "Choose how you want to add your document.": "Elige cómo quieres añadir tu documento.",
+  "How would you like to import?": "¿Cómo quieres importar el documento?",
+  "Copy text from an article, book, or document.": "Copia texto de un artículo, libro o documento.",
+  "Choose TXT, Markdown, HTML, PDF, or EPUB from your device.": "Elige un archivo TXT, Markdown, HTML, PDF o EPUB de tu dispositivo.",
+  "Change import method": "Cambiar método de importación",
+  "Select a file to extract its text. You can review and edit it before saving.": "Selecciona un archivo para extraer su texto. Puedes revisarlo y editarlo antes de guardarlo.",
+  "Choose a file": "Elegir un archivo"
 }
