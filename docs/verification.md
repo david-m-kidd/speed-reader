@@ -36,3 +36,9 @@ Spanish interface verification covers all screens, reader position/content prese
 - Archive units check CRC/corruption, truncation, traversal, entry-count, ratio and dishonest inflation sizes. Worker cancellation and extracted-size guards bound imports; exact supported limits are in `imports.md`.
 - First-time PDF/EPUB imports work offline after caching; v2 backup restores source mappings in a fresh browser context; v1 backups remain accepted.
 - Mobile import preview is visually reviewed at 390 CSS pixels and checked for horizontal overflow. This is browser automation, not a physical iPhone test. Safari/Home Screen/Files/storage-eviction checks remain pending.
+
+## Demo and copy update — October 18, 2026
+
+Version 1.2 adds the English/Spanish first-visit demonstration, replay and static transcript. UI copy uses direct labels/instructions throughout the library, imports, highlights, statistics, settings and reader. Existing imported content is unchanged.
+
+Typecheck, lint and 39 unit checks pass. All 18 browser workflows pass at root and the nested project path, including demo completion → library, completion persistence without reading activity, existing-library bypass, replay, keyboard hold/release, language switching, offline demo, background pause and existing PDF/EPUB workflows. Screenshots are reviewed on a 390-pixel viewport; physical iPhone verification remains pending.

@@ -27,6 +27,7 @@ const integer = (n: unknown) => finite(n) && Number.isInteger(n);
 const str = (s: unknown) => typeof s === 'string';
 const id = (s: unknown) => str(s) && (s as string).length > 0 && (s as string).length < 200 && !['__proto__', 'constructor', 'prototype'].includes(s as string);
 export function validSettings(s: Settings) {
+  if (s?.demoCompleted !== undefined && typeof s.demoCompleted !== 'boolean') return false;
   if (s?.uiLanguage !== undefined && !['en', 'es'].includes(s.uiLanguage)) return false;
   if (!s || !integer(s.wpm) || s.wpm < 100 || s.wpm > 1000 || s.wpm % 25 || !['dark', 'light', 'sepia'].includes(s.theme) || !['sans', 'serif', 'mono'].includes(s.font) || !integer(s.fontSize) || s.fontSize < 24 || s.fontSize > 80 || !/^#[a-f0-9]{6}$/i.test(s.anchorColor) || !integer(s.goal) || s.goal < 1 || s.goal > 1_000_000 || !str(s.timezone)) return false;
   if (!['guides', 'punctuation', 'longWords', 'hold', 'reducedMotion'].every(k => typeof s[k as keyof Settings] === 'boolean')) return false;

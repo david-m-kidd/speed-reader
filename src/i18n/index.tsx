@@ -11,7 +11,7 @@ export function translate(text: string, language: Language, values: unknown[] = 
 const LanguageContext = createContext({ language: 'en' as Language, locale: 'en-US', setLanguage: (_: Language) => {}, t: (text: string, values?: unknown[]) => translate(text, 'en', values) });
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>('en');
-  useEffect(() => { document.documentElement.lang = language; document.title = language === 'es' ? 'Stillword — Un lugar tranquilo para leer' : 'Stillword — A quieter place to read'; }, [language]);
+  useEffect(() => { document.documentElement.lang = language; document.title = language === 'es' ? 'Stillword — Herramientas de lectura' : 'Stillword — Reading tools'; }, [language]);
   const value = useMemo(() => ({ language, locale: language === 'es' ? 'es-ES' : 'en-US', setLanguage, t: (text: string, values?: unknown[]) => translate(text, language, values) }), [language]);
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 }

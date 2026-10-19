@@ -1,7 +1,7 @@
 import { test, expect, type Page } from '@playwright/test';
 
 async function importText(page: Page, text: string, title = 'A quiet test') {
-  await page.goto('./#import'); await page.getByPlaceholder('Give this read a name').fill(title);
+  await page.goto('./#import'); await page.getByPlaceholder('Document title').fill(title);
   await page.getByTestId('import-text').fill(text); await page.getByRole('button', { name: 'Review text' }).click();
   await page.getByRole('button', { name: 'Save to library' }).click(); await expect(page.getByTestId('rsvp-word')).toBeVisible();
 }
@@ -53,7 +53,7 @@ test('manifest, worker, assets and hash routes remain inside the application bas
   const base = new URL('./', page.url()).pathname; expect(manifest.start_url).toBe(base); expect(manifest.scope).toBe(base);
   const scope = await page.evaluate(async () => (await navigator.serviceWorker.ready).scope); expect(new URL(scope).pathname).toBe(base);
   for (const icon of manifest.icons) expect((await page.request.get(new URL(icon.src, new URL(manifestUrl!, page.url())).href)).ok()).toBe(true);
-  await page.reload(); await expect(page.getByRole('heading', { name: 'A comfortable place to focus.' })).toBeVisible();
+  await page.reload(); await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
 });
 test('HTML extraction is inert and preserves readable order', async ({ page }) => {
   const tracking: string[] = []; page.on('request', req => { if (req.url().includes('tracker.invalid')) tracking.push(req.url()); });
@@ -74,7 +74,7 @@ test('completion counts intervals, seek counts nothing, and visibility pauses', 
   await page.evaluate(() => { Object.defineProperty(document, 'hidden', { configurable: true, value: true }); document.dispatchEvent(new Event('visibilitychange')); }); await expect(page.getByRole('button', { name: 'Play', exact: true })).toBeVisible();
 });
 test('empty library and phone layout are usable', async ({ page }) => {
-  await page.goto('./'); await expect(page.getByRole('button', { name: 'Add your first read' })).toBeVisible(); await page.screenshot({ path: 'test-results/library-desktop.png', fullPage: true });
+  await page.goto('./#library'); await expect(page.getByRole('button', { name: 'Add your first read' })).toBeVisible(); await page.screenshot({ path: 'test-results/library-desktop.png', fullPage: true });
   await page.setViewportSize({ width: 390, height: 844 }); await page.screenshot({ path: 'test-results/library-mobile.png', fullPage: true }); expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 test('hold is the default; word and thumb control pause on release or cancellation', async ({ page }) => {
@@ -119,8 +119,8 @@ test('Spanish covers every screen, persists offline, and preserves book content 
   await page.getByPlaceholder('¿Qué te llamó la atención?').fill('My note: Settings');
   await page.getByRole('button', { name: 'Guardar subrayado' }).click(); await expect(page.getByText('Subrayado guardado')).toBeVisible();
   await page.getByRole('button', { name: 'Cerrar contexto' }).click(); await page.getByRole('button', { name: 'Biblioteca', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'Un lugar más tranquilo para tu mente.' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Algunos buenos comienzos.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Tu biblioteca' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Capítulos de muestra' })).toBeVisible();
   await page.screenshot({ path: 'test-results/spanish-library-mobile.png', fullPage: true });
   await page.goto('./#import'); await expect(page.getByRole('button', { name: 'Subir un archivo' })).toBeVisible();
   await page.getByTestId('import-text').fill('Texto de prueba.'); await page.getByRole('button', { name: 'Revisar texto' }).click(); await expect(page.getByRole('button', { name: 'Guardar en la biblioteca' })).toBeVisible();

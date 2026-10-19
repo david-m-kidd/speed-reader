@@ -1,6 +1,6 @@
 # Stillword
 
-A quieter place to read. An original, local-first reading PWA built for David’s `speed-reader` repository. Milestones 1 and 2 implement a fixed-anchor word-at-a-time reader, text/Markdown/HTML/PDF/EPUB imports, local library and progress, highlights, activity, backups, and offline caching. No narration, app blocking, tracking, accounts, or document uploads.
+Personal reading tools. An original, local-first reading PWA built for David’s `speed-reader` repository. Milestones 1 and 2 implement a fixed-anchor word-at-a-time reader, text/Markdown/HTML/PDF/EPUB imports, local library and progress, highlights, activity, backups, and offline caching. No narration, app blocking, tracking, accounts, or document uploads.
 
 ## Run locally
 
@@ -23,6 +23,10 @@ Use `http://localhost`, `http://127.0.0.1`, or an HTTPS deployment for service w
 ## Interface language
 
 Use the **EN / ES** switch in the header or reader, or choose the interface language in Settings. Navigation, forms, controls, dialogs, activity labels and error messages switch to Spanish. The choice is saved on the device, works offline and travels in backups. Existing backups without a language preference remain supported. Book text, user titles, highlights and notes are never machine-translated. Source/legal license notices retain their original wording.
+
+## First visit and demo
+
+New visitors at the site root start with a short instructional demo. Hold to read, release to pause, adjust the speed, or use Play. Completing the demo reveals Continue to library; Skip demo and an accessible static-text alternative are available. Completion/skip is saved in device settings and backups. Existing libraries bypass onboarding. The library offers Replay demo, three public-domain demo chapters, and document import. Demo text is authored in English and Spanish and does not create books, progress records, or reading activity. Direct links to import/settings/library remain usable.
 
 ## Use it
 

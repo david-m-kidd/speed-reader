@@ -4,7 +4,7 @@ Stillword uses React/React DOM (MIT), Dexie (Apache-2.0), Lucide icons (ISC), Vi
 
 DM Sans is bundled locally through `@fontsource-variable/dm-sans`; see `public/DM-Sans-OFL.txt` for the font license. No remote font/CDN request is used at runtime. The in-app name “Still Sans” is an interface label for this bundled family, not a claim to a newly authored font.
 
-The leaf application icon, interface composition, sample read “The art of paying attention,” and original test text were authored for this project. No Readrrr assets, proprietary text, logos, or source implementation are included. The supplied build brief is retained as the project specification.
+The leaf application icon, interface composition, instructional reader demo, and original test text were authored for this project. No Readrrr assets, proprietary text, logos, or source implementation are included. The supplied build brief is retained as the project specification.
 
 The three classic chapter samples are derived from Project Gutenberg editions 11, 1342 and 2000. See `docs/sample-books.md` for authors, source links, extraction details and U.S. public-domain status; `public/samples/NOTICE.txt` contains production credits and the complete Project Gutenberg license. These sample book texts were not authored for this project.
 

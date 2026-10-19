@@ -1,0 +1,28 @@
+import { test,expect } from '@playwright/test';
+test('first landing teaches playback, completes into the library, and stays completed after reload',async({page})=>{
+  await page.setViewportSize({width:390,height:844});await page.goto('./');
+  await expect(page.getByRole('heading',{name:'Read one word at a time.'})).toBeVisible();await expect(page.getByTestId('rsvp-word')).toHaveText('This');
+  await expect(page.getByRole('navigation',{name:'Main navigation'})).toHaveCount(0);
+  const control=page.getByTestId('demo-hold-control'),box=(await control.boundingBox())!;
+  await page.mouse.move(box.x+box.width/2,box.y+box.height/2);await page.mouse.down();await expect(page.getByRole('button',{name:'Pause demo'})).toBeVisible();await page.waitForTimeout(600);await page.mouse.up();await expect(page.getByRole('button',{name:'Play demo'})).toBeVisible();
+  const progress=await page.getByRole('progressbar',{name:'Demo progress'}).getAttribute('value');expect(+progress!).toBeGreaterThan(0);await page.waitForTimeout(300);await expect(page.getByRole('progressbar',{name:'Demo progress'})).toHaveAttribute('value',progress!);
+  await page.getByRole('slider',{name:'Demo reading speed'}).fill('1000');await expect(page.getByRole('progressbar',{name:'Demo progress'})).toHaveAttribute('value',progress!);
+  await page.screenshot({path:'test-results/demo-mobile.png',fullPage:true});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+  await page.getByRole('button',{name:'Play demo'}).click();await expect(page.getByRole('button',{name:'Continue to library'})).toBeVisible({timeout:20000});await page.getByRole('button',{name:'Continue to library'}).click();
+  await expect(page.getByRole('heading',{name:'Your library',exact:true})).toBeVisible();await expect(page.getByRole('heading',{name:'Demo chapters',exact:true})).toBeVisible();await expect(page.locator('.book-card')).toHaveCount(0);
+  await page.goto('./#settings');const event=page.waitForEvent('download');await page.getByRole('button',{name:'Export backup'}).click();const download=await event;const backup=await page.evaluate(url=>fetch(url).then(r=>r.json()),download.url());expect(backup.documents).toEqual([]);expect(backup.sessions).toEqual([]);expect(backup.settings.demoCompleted).toBe(true);
+  await page.goto('./');await expect(page.getByRole('heading',{name:'Your library',exact:true})).toBeVisible();
+  await page.getByRole('button',{name:'Replay demo'}).click();await expect(page.getByTestId('rsvp-word')).toHaveText('This');await page.getByRole('button',{name:'Skip demo'}).click();await expect(page.getByRole('heading',{name:'Your library',exact:true})).toBeVisible();
+});
+test('Spanish demo works offline, supports static reading, and pauses on backgrounding',async({page,context})=>{
+  await page.goto('./');await page.getByRole('button',{name:'Español',exact:true}).click();await expect(page.getByTestId('rsvp-word')).toHaveText('Esta');await page.setViewportSize({width:320,height:740});expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.getByRole('button',{name:'Reproducir demostración'}).click();await page.waitForTimeout(300);
+  await page.evaluate(()=>{Object.defineProperty(document,'hidden',{configurable:true,value:true});document.dispatchEvent(new Event('visibilitychange'));});await expect(page.getByRole('button',{name:'Reproducir demostración'})).toBeVisible();
+  await page.evaluate(()=>navigator.serviceWorker.ready);await page.reload();await context.setOffline(true);await page.reload();await expect(page.getByRole('heading',{name:'Lee una palabra a la vez.'})).toBeVisible();await expect(page.getByRole('button',{name:'Reproducir demostración'})).toBeVisible();
+  await page.getByRole('button',{name:'Leer la demostración como texto'}).click();await expect(page.getByRole('heading',{name:'Texto de la demostración'})).toBeVisible();await expect(page.locator('.demo-transcript')).toContainText('Tus libros y tu progreso de lectura');await page.getByRole('button',{name:'Continuar a la biblioteca'}).click();await expect(page.getByRole('heading',{name:'Tu biblioteca',exact:true})).toBeVisible();
+});
+test('existing libraries bypass the first-visit demo and library actions still open samples and imports',async({page})=>{
+  await page.goto('./#import');await page.getByTestId('import-text').fill('Existing personal document.');await page.getByRole('button',{name:'Review text'}).click();await page.getByRole('button',{name:'Save to library'}).click();await expect(page.getByTestId('rsvp-word')).toBeVisible();
+  await page.goto('./');await expect(page.getByRole('heading',{name:'Your library',exact:true})).toBeVisible();await page.locator('.sample-book').first().getByRole('button',{name:'Read this chapter'}).click();await expect(page.getByRole('link',{name:'Source & license',exact:true})).toBeVisible();await page.getByRole('button',{name:'Library',exact:true}).click();await page.getByRole('button',{name:'Replay demo'}).click();
+  const control=page.getByTestId('demo-hold-control');await control.focus();await page.keyboard.down('Space');await expect(page.getByRole('button',{name:'Pause demo'})).toBeVisible();await page.keyboard.up('Space');await expect(page.getByRole('button',{name:'Play demo'})).toBeVisible();
+  await page.getByRole('button',{name:'Skip demo'}).click();await page.getByRole('button',{name:'Add a read',exact:true}).click();await expect(page.getByRole('heading',{name:'Import a document',exact:true})).toBeVisible();
+});

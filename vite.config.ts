@@ -10,7 +10,7 @@ export default defineConfig({
     registerType: 'prompt', injectRegister: false, base, scope: base,
     includeAssets: ['icon.svg', 'apple-touch-icon.png', 'samples/NOTICE.txt', 'PDFjs-LICENSE.txt', 'fflate-LICENSE.txt'],
     manifest: {
-      name: 'Stillword — Focus Reader', short_name: 'Stillword', description: 'A quieter place to read.',
+      name: 'Stillword — Focus Reader', short_name: 'Stillword', description: 'A personal reader for text, PDF and EPUB.',
       id: base, start_url: base, scope: base, display: 'standalone',
       background_color: '#151a18', theme_color: '#151a18',
       icons: [{ src: 'icon-192.png', sizes: '192x192', type: 'image/png' }, { src: 'icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }],

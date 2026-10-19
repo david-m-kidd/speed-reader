@@ -23,3 +23,9 @@ Sessions hold completed word counts, active milliseconds, settings at session st
 Automated tests cover clock behavior, token/anchor invariants, timezone accounting, transactional backups, browser interactions, HTML isolation, layout alignment, offline relaunch, substantial-file import, and hosting paths. Physical iPhone behavior is a separate acceptance gate.
 
 `src/i18n/` supplies explicit English-keyed Spanish UI translations through React context. Visible UI strings and accessible labels are localized at their render sites; document fields and input values are not passed to translation. `settings.uiLanguage` is optional for compatibility with earlier backup/settings records. Numbers and day labels use the selected locale; document offsets, timing, data IDs and timezone bucket keys remain unchanged. The HTML language and page title follow the interface preference.
+
+## First-visit reader demo
+
+The root route (`home`) shows `Demo` for an empty library with no `settings.demoCompleted` marker. Existing documents or a completed/skipped demo lead to the library. Explicit hash routes remain directly accessible; `#demo` replays the introduction. Completion/skip is saved with the existing settings record and is optional in validation, preserving compatibility with old backups.
+
+`Demo` reuses the pure Playback engine and measured Word renderer, but writes no documents, progress, highlights or sessions. Playback stays paused until a hold, Play or keyboard command. Language changes recreate the instructional stream paused. Visibility/pagehide and service-worker update events pause it. The static transcript provides an accessible alternative and a route into the library without timed playback. No autoplay or comprehension/speed claims are used.

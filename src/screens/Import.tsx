@@ -43,10 +43,10 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
   const updateCleanup=(options:PdfCleanup)=>{if(!pages||!book)return;setCleanup(options);setBook({...book,sections:pdfSections(pages,options)});};
   const sectionLabel=(index:number)=>book?.sections[index]?.kind==='page'?t('Page {0}',[book.sections[index].label]):book?.sections[index]?.label;
   return <div className="page narrow"><button className="text-button" onClick={back}><ArrowLeft size={17}/>{t(' Your library')}</button>
-    <div className="eyebrow">{t('MAKE ROOM FOR A GOOD READ')}</div><h1>{t('Add something')}<br/><em>{t('worth your attention.')}</em></h1><p className="lede">{t('An article, a chapter, a thought you’ve been meaning to return to.')}</p>
-    <div className="import-panel"><div className="section-heading"><h2>{preview?t('Review your text'):t('Start with your words')}</h2><span className="pill">{preview?t('{0} words',[count.toLocaleString(locale)]):t('01 / IMPORT')}</span></div>
+    <div className="eyebrow">{t('DOCUMENT IMPORT')}</div><h1>{t('Import a document')}</h1><p className="lede">{t('Paste text or upload TXT, Markdown, HTML, PDF, or EPUB. Review the extracted text before saving.')}</p>
+    <div className="import-panel"><div className="section-heading"><h2>{preview?t('Review your text'):t('Paste or upload')}</h2><span className="pill">{preview?t('{0} words',[count.toLocaleString(locale)]):t('01 / IMPORT')}</span></div>
       {extracting&&<div role="status" className="import-progress"><span>{progress[1]?t('Extracting {0} of {1}…',progress):t('Preparing import…')}</span><progress value={progress[0]} max={progress[1]||1}/><button className="secondary" onClick={()=>controller.current?.abort()}>{t('Cancel import')}</button></div>}
-      <label>{t('Title ')}<span className="muted">{t('(optional)')}</span><input placeholder={t('Give this read a name')} value={title} onChange={e=>setTitle(e.target.value)} maxLength={300} disabled={busy}/></label>
+      <label>{t('Title ')}<span className="muted">{t('(optional)')}</span><input placeholder={t('Document title')} value={title} onChange={e=>setTitle(e.target.value)} maxLength={300} disabled={busy}/></label>
       {book?.author&&<p className="fine">{book.author}</p>}
       {book&&<div className="extraction-details">
         {book.warnings.map(w=><p className="extraction-warning" key={w}>{t(w)}</p>)}
@@ -54,7 +54,7 @@ export function ImportScreen({ save, back }: { save: (d: ReadingDocument) => Pro
         <label>{t('Page or chapter')}<select value={section} disabled={busy} onChange={e=>setSection(+e.target.value)}>{book.sections.map((s,i)=><option key={i} value={i}>{sectionLabel(i)}{!s.text?' · '+t('No text'):''}</option>)}</select></label>
         {pages&&<details><summary>{t('Before cleanup · extracted page text')}</summary><pre className="source-preview">{pdfSections([pages[section]],defaultCleanup)[0].text||t('No text')}</pre></details>}
       </div>}
-      <label>{preview?t('Cleaned text · edit anything before saving'):t('Paste text')}<textarea data-testid="import-text" rows={12} placeholder={t('A little less scrolling. A little more reading. Paste your text here…')} value={book?book.sections[section]?.text||'':preview?text:raw} disabled={busy} onChange={e=>{if(book)setBook({...book,sections:book.sections.map((s,i)=>i===section?{...s,text:e.target.value}:s)});else if(preview)setText(e.target.value);else setRaw(e.target.value);}} spellCheck={false}/></label>
+      <label>{preview?t('Cleaned text · edit anything before saving'):t('Paste text')}<textarea data-testid="import-text" rows={12} placeholder={t('Paste the text you want to read…')} value={book?book.sections[section]?.text||'':preview?text:raw} disabled={busy} onChange={e=>{if(book)setBook({...book,sections:book.sections.map((s,i)=>i===section?{...s,text:e.target.value}:s)});else if(preview)setText(e.target.value);else setRaw(e.target.value);}} spellCheck={false}/></label>
       <p className="fine">{t('Up to 20 MB per input and 250,000 words per document. English and Spanish supported. Your text is never silently shortened.')}</p>
       {book&&<p className="fine">{t('Each page or chapter stays editable. Locations are saved with your text; original file bytes are not kept.')}</p>}
       {error&&<p role="alert" className="error">{t(error)}</p>}

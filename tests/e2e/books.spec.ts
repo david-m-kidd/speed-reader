@@ -4,7 +4,7 @@ import lockedPdf from '../fixtures/locked-pdf.json' with { type: 'json' };
 test('EPUB follows spine order, strips unsafe content and restores chapter mappings offline',async({page,context,browser})=>{
   const tracking:string[]=[];page.on('request',r=>{if(r.url().includes('tracker.invalid'))tracking.push(r.url());});
   await page.goto('./#import');await page.getByLabel('Upload reading file').setInputFiles({name:'journey.epub',mimeType:'application/epub+zip',buffer:epubFixture()});
-  await expect(page.getByPlaceholder('Give this read a name')).toHaveValue('A quiet journey');await expect(page.getByTestId('import-text')).toHaveValue('First light\n\n¡Hola, café! A quiet morning begins.');
+  await expect(page.getByPlaceholder('Document title')).toHaveValue('A quiet journey');await expect(page.getByTestId('import-text')).toHaveValue('First light\n\n¡Hola, café! A quiet morning begins.');
   const picker=page.getByLabel('Page or chapter');await expect(picker.locator('option')).toHaveText(['First light','The garden']);await picker.selectOption('1');await expect(page.getByTestId('import-text')).toHaveValue('The garden\n\nÚltimo capítulo. The garden is peaceful.');
   await page.getByTestId('import-text').fill('The garden\n\nÚltimo capítulo. An edited peaceful garden.');await page.getByRole('button',{name:'Save to library'}).click();await expect(page.getByTestId('rsvp-word')).toHaveText('First');
   await page.getByRole('button',{name:'Context',exact:true}).click();await page.getByLabel('Page or chapter').selectOption('1');await expect(page.locator('.current-token')).toHaveText('The');await expect(page.locator('.context-text')).toContainText('An edited peaceful garden.');await page.getByRole('button',{name:'Close context'}).click();

@@ -12,7 +12,7 @@ export function Samples({ documents, save, open, report }: {
     const { t, locale } = useI18n();
 
     return <section className="samples-section" aria-labelledby="samples-heading">
-    <div className="section-heading"><div><div className="eyebrow">{t("A SMALL COLLECTION OF CLASSICS")}</div><h2 id="samples-heading">{t("A few good beginnings.")}</h2><p className="muted">{t("Opening chapters to find your rhythm. Yours to read offline.")}</p></div><span className="pill">{t("ENGLISH + ESPA\u00D1OL")}</span></div>
+    <div className="section-heading"><div><div className="eyebrow">{t("PUBLIC-DOMAIN SAMPLES")}</div><h2 id="samples-heading">{t("Demo chapters")}</h2><p className="muted">{t("Sample chapters in English and Spanish. Available offline.")}</p></div><span className="pill">{t("ENGLISH + ESPA\u00D1OL")}</span></div>
     <div className="sample-grid">{catalog.map((book, i) => {
             const existing = documents.find(d => d.sampleId === book.id || d.id === `sample-${book.id}`);
             return <article className={`sample-book sample-tone-${i}`} key={book.id}>
